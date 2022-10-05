@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">PartySoul</string>
+    <string name="app_title">PartySoul</string>
+    <string name="home_nav_label">Home</string>
+    <string name="jokes_nav_label">Jokes</string>
+    <string name="home_logo_alt_text">Application logo</string>
+    <string name="jokes_button">Jokes</string>
+    <string name="jokes_view_title">Jokes</string>
+    <string name="noJokesText">No jokes yet!</string>
+</resources>
