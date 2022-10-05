@@ -13,7 +13,7 @@ data class Joke(
     var source: String,
 
     @ColumnInfo(name = "joke_id")
-    var jokeId: String?,
+    var jokeId: String? = null,
 
     @ColumnInfo(name = "content")
     var content: String,

@@ -8,9 +8,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dalbitresb.partysoul.adapters.JokeAdapter
 import com.dalbitresb.partysoul.models.Joke
+import com.dalbitresb.partysoul.services.DadJokesFetcher
+import com.dalbitresb.partysoul.services.GeekJokesFetcher
 import com.google.android.material.appbar.MaterialToolbar
+import kotlin.random.Random
 
 class JokesActivity : AppCompatActivity() {
+    private val dadJokesFetcher = DadJokesFetcher("https://icanhazdadjoke.com/")
+    private val geekJokesFetcher = GeekJokesFetcher("https://geek-jokes.sameerkumar.website/")
     private val jokeRepository by lazy { (application as JokeApplication).repository }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,20 +39,19 @@ class JokesActivity : AppCompatActivity() {
 
         adapter.submitList(jokeRepository.getAll())
 
-        // TODO: Make network requests here
         val button = findViewById<Button>(R.id.addButton)
         button.setOnClickListener {
             val list = adapter.currentList.toMutableList()
-            list.add(
-                Joke(
-                    source = "geek",
-                    jokeId = null,
-                    content = "Super fun joke 1",
-                    rating = .5f,
-                    createdAt = "2022-10-03T18:20:45",
-                )
-            )
-            adapter.submitList(list)
+            val handler = { joke: Joke ->
+                list.add(joke)
+                adapter.submitList(list)
+            }
+            // Select randomly the next API to use
+            if (Random.nextBoolean()) {
+                dadJokesFetcher.fetch(handler)
+            } else {
+                geekJokesFetcher.fetch(handler)
+            }
         }
     }
 
