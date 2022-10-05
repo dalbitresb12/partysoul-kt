@@ -23,6 +23,12 @@
             app:title="@string/jokes_view_title"
             app:titleTextColor="?attr/colorOnPrimary" />
 
+        <Button
+            android:id="@+id/addButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="@string/load_more" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView

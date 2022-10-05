@@ -2,19 +2,16 @@ package com.dalbitresb.partysoul
 
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.activity.viewModels
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dalbitresb.partysoul.adapters.JokeAdapter
-import com.dalbitresb.partysoul.viewmodels.JokeViewModel
-import com.dalbitresb.partysoul.viewmodels.JokeViewModelFactory
+import com.dalbitresb.partysoul.models.Joke
 import com.google.android.material.appbar.MaterialToolbar
 
 class JokesActivity : AppCompatActivity() {
-    private val jokeViewModel: JokeViewModel by viewModels {
-        JokeViewModelFactory((application as JokeApplication).repository)
-    }
+    private val jokeRepository by lazy { (application as JokeApplication).repository }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,21 +27,28 @@ class JokesActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        val adapter = JokeAdapter { joke -> jokeViewModel.update(joke) }
-        jokeViewModel.data.observe(this) { jokes -> adapter.submitList(jokes) }
+        val adapter = JokeAdapter { joke -> jokeRepository.insert(joke) }
         val recyclerView = findViewById<RecyclerView>(R.id.jokesRecyclerView)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
-//        jokeViewModel.deleteAll()
-//        jokeViewModel.insert(
-//            Joke(
-//                "geek",
-//                null,
-//                "Super fun joke 2",
-//                4.5f,
-//                "2022-10-03T18:20:45"
-//            ),
-//        )
+
+        adapter.submitList(jokeRepository.getAll())
+
+        // TODO: Make network requests here
+        val button = findViewById<Button>(R.id.addButton)
+        button.setOnClickListener {
+            val list = adapter.currentList.toMutableList()
+            list.add(
+                Joke(
+                    source = "geek",
+                    jokeId = null,
+                    content = "Super fun joke 1",
+                    rating = .5f,
+                    createdAt = "2022-10-03T18:20:45",
+                )
+            )
+            adapter.submitList(list)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
