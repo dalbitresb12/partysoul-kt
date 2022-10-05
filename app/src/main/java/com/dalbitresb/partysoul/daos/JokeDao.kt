@@ -1,26 +1,25 @@
 package com.dalbitresb.partysoul.daos
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import com.dalbitresb.partysoul.models.Joke
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface JokeDao {
     @Query("SELECT * FROM joke")
-    fun getAll(): Flow<List<Joke>>
+    fun getAll(): List<Joke>
 
-    @Query("SELECT * FROM joke WHERE content LIKE :content LIMIT 1")
-    fun findByContent(content: String): Joke
+    @Query("SELECT * FROM joke WHERE joke_id LIKE :jokeId AND source LIKE :source LIMIT 1")
+    fun findByJokeIdAndSource(jokeId: String, source: String): Joke
+
+    @Query("SELECT * FROM joke WHERE content LIKE :content AND source LIKE :source LIMIT 1")
+    fun findByContentAndSource(content: String, source: String): Joke
 
     @Update
-    suspend fun updateAll(vararg jokes: Joke)
+    fun update(joke: Joke)
 
-    @Insert
-    suspend fun insertAll(vararg jokes: Joke)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(joke: Joke)
 
     @Query("DELETE FROM joke")
-    suspend fun deleteAll()
+    fun deleteAll()
 }

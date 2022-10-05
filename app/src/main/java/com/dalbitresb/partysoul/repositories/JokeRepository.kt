@@ -4,17 +4,27 @@ import com.dalbitresb.partysoul.daos.JokeDao
 import com.dalbitresb.partysoul.models.Joke
 
 class JokeRepository(private val jokeDao: JokeDao) {
-    val data = jokeDao.getAll()
-
-    suspend fun update(joke: Joke) {
-        jokeDao.updateAll(joke)
+    fun getAll(): List<Joke> {
+        return jokeDao.getAll()
     }
 
-    suspend fun insert(joke: Joke) {
-        jokeDao.insertAll(joke)
+    fun findByJokeIdAndSource(jokeId: String, source: String): Joke {
+        return jokeDao.findByJokeIdAndSource(jokeId, source)
     }
 
-    suspend fun deleteAll() {
+    fun findByContentAndSource(content: String, source: String): Joke {
+        return jokeDao.findByContentAndSource(content, source)
+    }
+
+    fun update(joke: Joke) {
+        jokeDao.update(joke)
+    }
+
+    fun insert(joke: Joke) {
+        jokeDao.insert(joke)
+    }
+
+    fun deleteAll() {
         jokeDao.deleteAll()
     }
 }

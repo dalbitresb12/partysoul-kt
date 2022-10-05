@@ -6,12 +6,21 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Joke(
-    @ColumnInfo(name = "source") var source: String,
-    @ColumnInfo(name = "joke_id") var jokeId: String?,
-    @ColumnInfo(name = "content") var content: String,
-    @ColumnInfo(name = "rating") var rating: Float,
-    @ColumnInfo(name = "created_at") var createdAt: String,
-) {
     @PrimaryKey(autoGenerate = true)
-    var id: Int = 0
-}
+    var id: Int? = null,
+
+    @ColumnInfo(name = "source")
+    var source: String,
+
+    @ColumnInfo(name = "joke_id")
+    var jokeId: String?,
+
+    @ColumnInfo(name = "content")
+    var content: String,
+
+    @ColumnInfo(name = "rating")
+    var rating: Float,
+
+    @ColumnInfo(name = "created_at")
+    var createdAt: String,
+)
