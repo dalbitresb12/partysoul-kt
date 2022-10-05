@@ -13,4 +13,8 @@ class JokeRepository(private val jokeDao: JokeDao) {
     suspend fun insert(joke: Joke) {
         jokeDao.insertAll(joke)
     }
+
+    suspend fun deleteAll() {
+        jokeDao.deleteAll()
+    }
 }

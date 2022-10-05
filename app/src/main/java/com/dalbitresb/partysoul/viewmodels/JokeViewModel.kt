@@ -18,4 +18,8 @@ class JokeViewModel(private val repository: JokeRepository) : ViewModel() {
     fun insert(joke: Joke) = viewModelScope.launch {
         repository.insert(joke)
     }
+
+    fun deleteAll() = viewModelScope.launch {
+        repository.deleteAll()
+    }
 }

@@ -30,13 +30,21 @@ class JokesActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        val adapter = JokeAdapter()
+        val adapter = JokeAdapter { joke -> jokeViewModel.update(joke) }
+        jokeViewModel.data.observe(this) { jokes -> adapter.submitList(jokes) }
         val recyclerView = findViewById<RecyclerView>(R.id.jokesRecyclerView)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
-        jokeViewModel.data.observe(this) { jokes ->
-            jokes.let { adapter.submitList(it) }
-        }
+//        jokeViewModel.deleteAll()
+//        jokeViewModel.insert(
+//            Joke(
+//                "geek",
+//                null,
+//                "Super fun joke 2",
+//                4.5f,
+//                "2022-10-03T18:20:45"
+//            ),
+//        )
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

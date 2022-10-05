@@ -3,6 +3,7 @@ package com.dalbitresb.partysoul.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -10,9 +11,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dalbitresb.partysoul.R
 import com.dalbitresb.partysoul.models.Joke
 
-class JokeAdapter : ListAdapter<Joke, JokeAdapter.ViewHolder>(JokesComparator()) {
+class JokeAdapter(private val onClick: (Joke) -> Unit) :
+    ListAdapter<Joke, JokeAdapter.ViewHolder>(JokesComparator()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder.create(parent)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.joke_item, parent, false)
+        return ViewHolder(view, onClick)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -20,26 +24,30 @@ class JokeAdapter : ListAdapter<Joke, JokeAdapter.ViewHolder>(JokesComparator())
         holder.bind(current)
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View, val onClick: (Joke) -> Unit) :
+        RecyclerView.ViewHolder(view) {
+        private lateinit var joke: Joke
         private val jokeTextView: TextView
         private val sourceTextView: TextView
+        private val ratingBar: RatingBar
 
         init {
             jokeTextView = view.findViewById(R.id.cardJokeTextView)
             sourceTextView = view.findViewById(R.id.cardSourceTextView)
+            ratingBar = view.findViewById(R.id.cardRatingBar)
+            ratingBar.setOnRatingBarChangeListener { _, rating, fromUser ->
+                if (fromUser) {
+                    joke.rating = rating
+                    onClick(joke)
+                }
+            }
         }
 
         fun bind(joke: Joke) {
+            this.joke = joke
             jokeTextView.text = joke.content
             sourceTextView.text = joke.source
-        }
-
-        companion object {
-            fun create(parent: ViewGroup): ViewHolder {
-                val view = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.joke_item, parent, false)
-                return ViewHolder(view)
-            }
+            ratingBar.rating = joke.rating
         }
     }
 
