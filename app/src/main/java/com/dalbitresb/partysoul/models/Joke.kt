@@ -1,6 +1,17 @@
 package com.dalbitresb.partysoul.models
 
-class Joke(
-    val content: String,
-    val source: String
-) {}
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity
+data class Joke(
+    @ColumnInfo(name = "source") var source: String,
+    @ColumnInfo(name = "joke_id") var jokeId: String?,
+    @ColumnInfo(name = "content") var content: String,
+    @ColumnInfo(name = "rating") var rating: Int,
+    @ColumnInfo(name = "created_at") var createdAt: String,
+) {
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0
+}

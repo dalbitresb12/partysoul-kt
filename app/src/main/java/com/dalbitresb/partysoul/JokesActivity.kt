@@ -2,13 +2,20 @@ package com.dalbitresb.partysoul
 
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dalbitresb.partysoul.adapters.JokeAdapter
-import com.dalbitresb.partysoul.models.Joke
+import com.dalbitresb.partysoul.viewmodels.JokeViewModel
+import com.dalbitresb.partysoul.viewmodels.JokeViewModelFactory
 import com.google.android.material.appbar.MaterialToolbar
 
 class JokesActivity : AppCompatActivity() {
+    private val jokeViewModel: JokeViewModel by viewModels {
+        JokeViewModelFactory((application as JokeApplication).repository)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_jokes)
@@ -23,13 +30,13 @@ class JokesActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        val jokes = ArrayList<Joke>()
-        jokes.add(Joke("Joke 1", "Source A"))
-        jokes.add(Joke("Joke 2", "Source B"))
-        jokes.add(Joke("Joke 3", "Source A"))
-
+        val adapter = JokeAdapter()
         val recyclerView = findViewById<RecyclerView>(R.id.jokesRecyclerView)
-        recyclerView.adapter = JokeAdapter(jokes)
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        jokeViewModel.data.observe(this) { jokes ->
+            jokes.let { adapter.submitList(it) }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
